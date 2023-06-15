@@ -1,0 +1,76 @@
+<html>
+    <head>
+        <title>Testimoni</title>
+        <link rel="stylesheet" href="public/css/testimonial.css">
+        <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
+        crossorigin="anonymous"
+      />
+    </head>
+    <body>
+      <nav class="navbar navbar-expand-lg bg-blue">
+        <div class="container">
+          <a class="navbar-brand" href="#">
+            <img src="public/Gambar/logo.png" width="30" height="30"/>
+          </a>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarTogglerDemo02"
+            aria-control="navbarTogglerDemo02"
+            aria-expanded="false"
+            aria-label="Toggle Navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="/">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="myproject">My Project</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active text-blue fw-bold" aria-current="page" href="testimonial">My Testimonials</a>
+              </li>
+            </ul>
+            <a href="contact" class="btn text-white px-2 bt-bg-blue">Contact Me</a>
+          </div>
+        </div>
+      </nav>     
+
+        <div class="container2">
+            <h1>My Testimonial</h1>
+            <h2>Sort By Ratting</h2>
+            <div class="ratting-container">
+                <button class="button-ratting" onclick="getAllTestimonials()" >ALL</button>
+                <button class="button-ratting" onclick="getFilteredTestimonials(1)">1 <i class="fa-solid fa-star"></i></button>
+                <button class="button-ratting" onclick="getFilteredTestimonials(2)">2 <i class="fa-solid fa-star"></i></button>
+                <button class="button-ratting" onclick="getFilteredTestimonials(3)">3 <i class="fa-solid fa-star"></i></button>
+                <button class="button-ratting" onclick="getFilteredTestimonials(4)">4 <i class="fa-solid fa-star"></i></button>
+                <button class="button-ratting" onclick="getFilteredTestimonials(5)">5 <i class="fa-solid fa-star"></i></button>
+            </div>
+            <section class="testimonials" id="testimonials">
+
+            </section>
+        </div>
+
+
+
+
+
+        <script src="public/js/exercise/3-ajax.js"></script>
+        <script src="https://kit.fontawesome.com/ecea77ed94.js" crossorigin="anonymous"></script>
+        <!-- <script src="public/js/index.js"></script> -->
+         <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+            crossorigin="anonymous"
+        ></script>
+
+    </body>
+</html>

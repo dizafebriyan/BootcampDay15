@@ -1,0 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+*{
+    font-family:"roboto";
+}
+
+.text-blue{
+    color: rgb(35, 144, 233) !important;
+}
+
+.bg-blue{
+    background-color: #a6c7e7 !important;
+}
+.bg-basic{
+    background-color :#d9e1e9 !important;
+}
+.bt-bg-blue{
+    background-color: rgb(35, 144, 233) !important;
+}
+
+.bt-bg-blue:hover{
+    background-color: white !important;
+    color: rgb(35, 144, 233) !important;
+    border-color: rgb(35, 144, 233) !important ;
+}
+
+/* nav{
+    height:8vh;
+} */
+
+.container-fluid{
+    height: 92vh;
+}
+
+.container-form{
+    width: 80%;
+    max-width: 500px;
+}
+
+.pointer {
+    cursor: pointer;
+}

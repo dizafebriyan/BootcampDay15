@@ -1,0 +1,113 @@
+<html>
+    <head>
+        <title>Edit Project</title>
+        <link rel="stylesheet" href="/public/css/project.css" />
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
+          crossorigin="anonymous"
+        />
+    </head>
+    <body>
+      <nav class="navbar navbar-expand-lg bg-blue">
+          <div class="container">
+            <a class="navbar-brand" href="#">
+              <img src="/public/Gambar/logo.png" width="30" height="30"/>
+            </a>
+            <button
+              class="navbar-toggler"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#navbarTogglerDemo02"
+              aria-control="navbarTogglerDemo02"
+              aria-expanded="false"
+              aria-label="Toggle Navigation"
+            >
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+              <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                  <a class="nav-link" aria-current="page" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link active text-blue fw-bold" aria-current="page" href="myproject">My Project</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" aria-current="page" href="testimonial">My Testimonials</a>
+                </li>
+              </ul>
+              <a href="contact" class="btn text-white px-2 bt-bg-blue">Contact Me</a>
+            </div>
+          </div>
+      </nav>
+
+      <div class="container-fluid d-flex justify-content-center align-items-center bg-basic card">
+        <div class="container-form">
+          <h1 class="mb-3 mt-5 text-center fs-1 fw-bold">EDIT MY PROJECT  </h1>
+          {{range $index, $data:= .project}}
+          <form action="/project-edit-post/{{$data.ID}}" method="post">
+            <div class="mb-3 fs-5 fw-bold ">
+              <label for="inputTitle" class="form-label">Title</label>
+              <input type="text" id="inputTitle" name="inputTitle" class="form-control" value="{{$data.Title}}"/>
+            </div>
+            <div class="d-flex justify-content-center mb-3">
+              <div class="d-flex flex-column m-2 w-50">
+                  <label for="input-blog-date-start"><h6 class="fs-6 fw-bold">Start Date</h6></label>
+                  <input class="rounded-1 border-0" name="startDate" id="input-blog-date-start" type="date" value="{{$data.StartDateFormator}}"/>
+              </div>
+              <div class="d-flex flex-column m-2 w-50">
+                  <label for="input-blog-date-end"><h6 class="fs-6 fw-bold">End Date</h6></label>
+                  <input class="rounded-1 border-0" name="endDate" id="input-blog-date-end" type="date" value="{{$data.EndDateFormator}}"/>
+              </div>
+            </div>
+            <h6 class="fs-6 fw-bold">Technologies</h6>
+            <div class="input-group mb-3 justify-content-center w-100">
+              <div class="input-group-prepend d-grid" style="grid-template-columns:auto auto; grid-gap :10px; flex:100%">
+                <div class="input-group-text user-select-none">
+                  <input name="iot" type="checkbox" id="inputcheckbox_iot">
+                  <label class="m-2 pointer" for="inputcheckbox_iot">IoT</label>
+                </div>
+                <div class="input-group-text user-select-none">
+                  <input name="ui" type="checkbox" id="inputcheckbox_ui">
+                  <label class="m-2 pointer" for="inputcheckbox_ui">UI/UX Design</label>
+                </div>
+                <div class="input-group-text user-select-none">
+                  <input name="full" type="checkbox" id="inputcheckbox_full">
+                  <label class="m-2 pointer" for="inputcheckbox_full">Fullstack Dev</label>
+                </div>
+                <div class="input-group-text user-select-none">
+                  <input name="ml" type="checkbox" id="inputcheckbox_ml">
+                  <label class="m-2 pointer" for="inputcheckbox_ml">Machine Learning</label>
+                </div>
+            </div>
+            </div>
+            <div class="mb-3 fs-5 fw-bold">
+              <label for="inputContent" class="form-label">Description</label>
+              <textarea name="inputContent" id="inputContent" cols="30" rows="10" class="form-control"> {{$data.Content}}</textarea>
+            </div>
+            <div class="mb-4 fs-5 fw-bold">
+              <label for="inputImage" class="form-label">Input Image</label>
+              <input type="file" id="inputImage" class="form-control"/>
+            </div>
+            <div class="d-grip gap-2 d-md-flex justify-content-md-end">
+              <button type="submit" class="btn bt-bg-blue text-white mb-5">Post Project</button>
+            </div>
+          </form>
+          {{end}}
+        </div>
+      </div>
+
+
+
+        <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+        crossorigin="anonymous"
+      ></script>
+  
+      <script src="https://kit.fontawesome.com/ecea77ed94.js" crossorigin="anonymous"></script>
+      <!-- <script src="public/js/blog.js"></script> -->
+    </body>
+</html>

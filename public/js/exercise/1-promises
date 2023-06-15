@@ -1,0 +1,22 @@
+let condition = true;
+
+let promise = new Promise(function (resolve,reject){
+    if (condition) {
+        resolve("promise is resolved");
+    }
+    else {
+        reject ("promise is rejected");
+    }
+})
+
+// console.log(promise);
+
+//memanggil fungsi promise dan mengeluargkan valuenya
+promise
+    .then(function(resolve){
+        console.log(resolve);
+        return alert(resolve);
+    })
+    .catch(function(reject){
+        console.log(reject);
+    });
