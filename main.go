@@ -3,12 +3,15 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
 	"net/http"
 	"profile/connection"
 	"strconv"
 	"text/template"
 	"time"
 
+	"github.com/gorilla/sessions"
+	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
 )
 
@@ -29,6 +32,20 @@ type Blog struct {
 	PostDate time.Time
 }
 
+type User struct {
+	ID       int
+	Name     string
+	Email    string
+	Password string
+}
+
+// type statuslogin struct {
+// 	isLogin bool
+// 	Name    string
+// }
+
+// var sessionLogin = statuslogin{}
+
 // var dataProject = []Blog{}
 
 func main() {
@@ -44,6 +61,8 @@ func main() {
 
 	e.Static("/public", "public")
 
+	//to use sessions using echo
+	e.Use(session.Middleware(sessions.NewCookieStore([]byte("session"))))
 	//Routing
 
 	//get
@@ -53,11 +72,18 @@ func main() {
 	e.GET("/testimonial", testimonial)
 	e.GET("/myproject/:id", blogDetail)
 	e.GET("project-edit/:id", editProject)
+	e.GET("/form-login", formLogin)
+	e.GET("/form-register", formRegister)
+	e.GET("/logout-button", logoutButton)
 
 	//post
 	e.POST("project-edit-post/:id", postEditProject)
 	e.POST("/addmyproject", addmyproject)
 	e.POST("/project-delete/:id", deleteproject)
+
+	//login & register
+	e.POST("/login", login)
+	// e.POST("/logout", logout)
 
 	e.Logger.Fatal(e.Start("localhost:5500"))
 
@@ -81,6 +107,8 @@ func home(c echo.Context) error {
 		result = append(result, each)
 	}
 
+	sess, _ := session.Get("session", c)
+
 	var tmpl, err = template.ParseFiles("views/index.html")
 
 	// data := map[string]interface{}{
@@ -92,8 +120,16 @@ func home(c echo.Context) error {
 	}
 
 	projects := map[string]interface{}{
-		"project": result,
+		"project":         result,
+		"FlashStatus":     sess.Values["status"],
+		"FlashMessage":    sess.Values["message"],
+		"FlashName":       sess.Values["name"],
+		"buttonIndicator": sess.Values["buttonIndicator"],
+		// "FlashName":   sessionLogin.Name,
+		// "FlashStatus": sessionLogin.isLogin,
 	}
+	delete(sess.Values, "buttonIndicator")
+	sess.Save(c.Request(), c.Response())
 
 	return tmpl.Execute(c.Response(), projects)
 }
@@ -103,14 +139,23 @@ func myproject(c echo.Context) error {
 	// data := map[string]interface{}{
 	// 	"login": true,
 	// }
-
+	sess, _ := session.Get("session", c)
 	var tmpl, err = template.ParseFiles("views/form-project.html")
 
 	if err != nil { //nil == null
 		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
 	}
 
-	return tmpl.Execute(c.Response(), nil)
+	projects := map[string]interface{}{
+		"FlashStatus":     sess.Values["status"],
+		"FlashMessage":    sess.Values["message"],
+		"FlashName":       sess.Values["name"],
+		"buttonIndicator": sess.Values["buttonIndicator"],
+		// "FlashName":   sessionLogin.Name,
+		// "FlashStatus": sessionLogin.isLogin,
+	}
+
+	return tmpl.Execute(c.Response(), projects)
 }
 
 func contact(c echo.Context) error {
@@ -122,8 +167,17 @@ func contact(c echo.Context) error {
 	if err != nil { //nil == null
 		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
 	}
+	sess, _ := session.Get("session", c)
 
-	return tmpl.Execute(c.Response(), nil)
+	projects := map[string]interface{}{
+		"FlashStatus":  sess.Values["status"],
+		"FlashMessage": sess.Values["message"],
+		"FlashName":    sess.Values["name"],
+		// "FlashName":   sessionLogin.Name,
+		// "FlashStatus": sessionLogin.isLogin,
+	}
+
+	return tmpl.Execute(c.Response(), projects)
 }
 
 func testimonial(c echo.Context) error {
@@ -131,14 +185,118 @@ func testimonial(c echo.Context) error {
 	// data := map[string]interface{}{
 	// 	"login": true,
 	// }
-
+	sess, _ := session.Get("session", c)
 	var tmpl, err = template.ParseFiles("views/testimonial.html")
 
 	if err != nil { //nil == null
 		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
 	}
 
+	projects := map[string]interface{}{
+		"FlashStatus":     sess.Values["status"],
+		"FlashMessage":    sess.Values["message"],
+		"FlashName":       sess.Values["name"],
+		"buttonIndicator": sess.Values["buttonIndicator"],
+		// "FlashName":   sessionLogin.Name,
+		// "FlashStatus": sessionLogin.isLogin,
+	}
+	return tmpl.Execute(c.Response(), projects)
+}
+
+func formLogin(c echo.Context) error {
+	var tmpl, err = template.ParseFiles("views/form-login.html")
+	if err != nil { //nil == null
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
+	}
+
+	sess, _ := session.Get("session", c)
+
+	projects := map[string]interface{}{
+		"FlashStatus":     sess.Values["status"],
+		"FlashMessage":    sess.Values["message"],
+		"FlashName":       sess.Values["name"],
+		"buttonIndicator": sess.Values["buttonIndicator"],
+	}
+	delete(sess.Values, "buttonIndicator")
+	delete(sess.Values, "message")
+	sess.Save(c.Request(), c.Response())
+
+	flashStatus := projects["FlashStatus"] //fungsi untuk memaksa jika telah login maka langsung ke generate ke home jika mengakses formlogin
+	println(flashStatus)
+	if flashStatus == true {
+		return c.Redirect(http.StatusMovedPermanently, "/")
+	}
+
+	return tmpl.Execute(c.Response(), projects)
+}
+
+func formRegister(c echo.Context) error {
+	var tmpl, err = template.ParseFiles("views/form-register.html")
+
+	if err != nil { //nil == null
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
+	}
 	return tmpl.Execute(c.Response(), nil)
+}
+
+func login(c echo.Context) error {
+	err := c.Request().ParseForm()
+	if err != nil {
+		log.Fatal(err)
+	}
+	email := c.FormValue("inputEmail")
+	// password := c.FormValue("inputPassowrd")
+
+	user := User{}
+
+	err = connection.Conn.QueryRow(context.Background(), "SELECT * FROM tb_user WHERE email=$1", email).Scan(&user.ID, &user.Name, &user.Email, &user.Password)
+	if err != nil {
+		sess, _ := session.Get("session", c)
+		sess.Values["message"] = "Login Failed"
+		sess.Values["status"] = false
+		sess.Values["buttonIndicator"] = false
+		return redirectWithMessage(c, "Email Incorrect", false, "/form-login")
+	}
+
+	sess, _ := session.Get("session", c)
+	sess.Options.MaxAge = 10800
+	sess.Values["message"] = "Login Success"
+	sess.Values["status"] = true
+	sess.Values["name"] = user.Name
+	sess.Values["id"] = user.ID
+	sess.Values["isLogin"] = true
+	sess.Values["buttonIndicator"] = true
+	sess.Save(c.Request(), c.Response())
+
+	// sessionLogin.Name = sess.Values["name"].(string)
+	// sessionLogin.isLogin = sess.Values["status"].(bool)
+
+	return c.Redirect(http.StatusMovedPermanently, "/")
+}
+
+func logoutButton(c echo.Context) error {
+	var tmpl, err = template.ParseFiles("views/form-login.html")
+
+	if err != nil { //nil == null
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
+	}
+
+	sess, _ := session.Get("session", c)
+	sess.Options.MaxAge = -1
+	sess.Save(c.Request(), c.Response())
+
+	println("Logout Successfull")
+
+	return tmpl.Execute(c.Response(), nil)
+
+}
+
+func redirectWithMessage(c echo.Context, message string, status bool, path string) error {
+	sess, _ := session.Get("session", c)
+	sess.Values["message"] = message
+	sess.Values["status"] = status
+	sess.Save(c.Request(), c.Response())
+	return c.Redirect(http.StatusMovedPermanently, path)
 }
 
 func blogDetail(c echo.Context) error {

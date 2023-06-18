@@ -59,3 +59,10 @@ URL connection database :
 - host = host database, secara local akan menggunakan localhost
 - port = port database
 - dbname = nama database
+
+# Form Registrasi dan Form Login (Day 15)
+
+sebelum memulai, perlu mempersiapkan form-login dan form-register yang sudah di buat dalam bentuk HTML, lalu install juga :
+```bash
+go get github.com/labstack/echo-contrib/session
+```

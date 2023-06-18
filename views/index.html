@@ -29,18 +29,33 @@
           >
             <span class="navbar-toggler-icon"></span>
           </button>
-          <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+          <div class="collapse navbar-collapse gap-3" id="navbarTogglerDemo02">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
               <li class="nav-item">
                 <a class="nav-link active text-blue fw-bold" aria-current="page" href="/">Home</a>
               </li>
+              {{if.FlashMessage}} {{if.FlashStatus}}
               <li class="nav-item">
                 <a class="nav-link" aria-current="page" href="myproject">My Project</a>
               </li>
+             {{end}}{{end}}
               <li class="nav-item">
                 <a class="nav-link" aria-current="page" href="testimonial">My Testimonials</a>
               </li>
             </ul>
+
+            {{if.FlashMessage}} {{if.FlashStatus}}
+            <a type="text">Welcome {{.FlashName}}</a>
+            <style>
+              .hiddenset {
+                display: none !important;
+              }
+            </style>
+            <a href="logout-button" class="btn">Logout</a>
+            {{end}}{{end}}
+
+            <a href="form-login" class="btn hiddenset">Login</a>
+            <a href="form-register" class="btn hiddenset">Register</a>
             <a href="contact" class="btn text-white px-2 bt-bg-blue">Contact Me</a>
           </div>
         </div>
@@ -48,6 +63,14 @@
 </head>
 
 <body >
+
+    {{if.FlashMessage}} {{if.buttonIndicator}}
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>{{.FlashMessage}}</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {{end}}{{end}}
+
     <div class="card2 w-75 p-lg-5 p-4">
         <section class="d-flex flex-column flex-lg-row ">
             <div class="left flex-column me-lg-3 mt-lg-5" style="flex:50% ;">
